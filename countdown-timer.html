@@ -1,0 +1,137 @@
+<!-- 20171030  react父子组件练习  苏倩文 -->
+
+<!doctype html>
+<meta charset='utf-8' />
+
+<script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+	// 天
+	var Day  = React.createClass({
+		getInitialState:function(){
+			return {} //没东西也要写，因为要初始化，后面才能改
+		},
+		// 接收新参数
+		componentWillReceiveProps(n){
+			// console.log(n)
+			this.setState({
+				dayVal : n.dayVal
+			});
+		},
+		render:function(){
+			return <li>
+						<label> {this.state.dayVal} </label>
+						<span>天</span>
+					</li>
+		}
+	});
+
+	// 小时
+	var Hour  = React.createClass({
+		getInitialState:function(){
+			return {}
+		},
+		componentWillReceiveProps(n){
+			// console.log(n)
+			this.setState({
+				hourVal : n.hourVal
+			});
+		},
+		render:function(){
+			return <li>
+						<label> {this.state.hourVal} </label>
+						<span>小时</span>
+					</li>
+		}
+	});
+
+	// 分
+	var Min  = React.createClass({
+		getInitialState:function(){
+			return {}
+		},
+		componentWillReceiveProps(n){
+			// console.log(n)
+			this.setState({
+				minVal : n.minVal
+			});
+		},
+		render:function(){
+			return <li>
+						<label> {this.state.minVal} </label>
+						<span>分</span>
+					</li>
+		}
+	});
+
+	// 秒
+	var Sec  = React.createClass({
+		getInitialState:function(){
+			return {}
+		},
+		componentWillReceiveProps(n){
+			// console.log(n)
+			this.setState({
+				secVal : n.secVal
+			});
+		},
+		render:function(){
+			return <li>
+						<label> {this.state.secVal} </label>
+						<span>秒</span>
+					</li>
+		}
+	});
+
+	// 父组件
+	var TimeWrap  = React.createClass({
+		getInitialState:function(){
+			return {
+				day:'-',
+				hour:'-',
+				min:'-',
+				sec:'-'
+			}
+		},
+		//生成真实dom之后
+		componentDidMount:function(){
+			var _self = this;
+			setInterval(function(){
+				var date  = new Date(); //当前日期
+				var date2 = new Date( 2018,0,1 ); //月从0-11，超过11则进年
+				var time  = (date2 - date) / 1000;// 每个日期对象都返回一个距离1970年1月1日的毫秒数
+
+				var day     = Math.floor(time / (24 * 60 * 60));
+		        var hour    = Math.floor(time % (24 * 60 * 60) / (60 * 60)); 
+		        var minute  = Math.floor(time % (24 * 60 * 60) % (60 * 60) / 60); 
+		        var second  = Math.floor(time % (24 * 60 * 60) % (60 * 60) % 60);
+
+				_self.setState({
+					day:day,
+					hour: hour,
+					min: minute,
+					sec: second
+				});
+			},1000);
+		},
+		render:function(){
+			return <ul> <p>距离2018.1.1还有：</p>
+						<Day dayVal = {this.state.day} />
+						<Hour hourVal = {this.state.hour} />
+						<Min minVal = {this.state.min} />
+						<Sec secVal = {this.state.sec} />
+					</ul>
+		}
+	});
+	
+	ReactDOM.render(
+		<TimeWrap />,
+		document.getElementById('root')
+	);
+
+</script>
